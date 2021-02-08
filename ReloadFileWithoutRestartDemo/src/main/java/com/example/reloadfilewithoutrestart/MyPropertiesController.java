@@ -13,6 +13,9 @@ public class MyPropertiesController {
 	
 	@GetMapping("/getproperty/{propertyName}")
 	public String getProperty(@PathVariable String propertyName) {
+		
 		return myProperties.getProperty(propertyName);
 	}
+	
+		 
 }

@@ -9,5 +9,4 @@ class ReloadFileWithoutRestartDemoTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
