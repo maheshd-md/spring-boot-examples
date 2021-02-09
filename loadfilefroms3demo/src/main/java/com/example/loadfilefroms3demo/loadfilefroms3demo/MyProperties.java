@@ -20,6 +20,10 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
+/**
+ * @author Mahesh D (dhavalshankh.md@gmail.com)
+ *
+ */
 @Component
 public class MyProperties {
 
