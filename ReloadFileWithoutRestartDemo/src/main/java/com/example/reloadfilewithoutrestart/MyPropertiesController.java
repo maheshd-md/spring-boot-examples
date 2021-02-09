@@ -16,6 +16,4 @@ public class MyPropertiesController {
 		
 		return myProperties.getProperty(propertyName);
 	}
-	
-		 
 }

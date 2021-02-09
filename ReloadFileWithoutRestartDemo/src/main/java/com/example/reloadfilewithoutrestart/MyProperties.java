@@ -25,42 +25,43 @@ public class MyProperties {
 		try {
 
 			// Reload local file without restarting the application
-//			String filePath = "/home/emgda/git/maheshd-md/spring-boot-examples/ReloadFileWithoutRestartDemo/src/main/resources/myproperties.properties";
-//			System.out.println("Loading the properties file: " + filePath);
-//			configuration = new PropertiesConfiguration(filePath);
-//			configuration.setAutoSave(true);
-//			FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
-//			fileChangedReloadingStrategy.setRefreshDelay(10 * 1000);
-//			configuration.setReloadingStrategy(fileChangedReloadingStrategy);
+			// Note - Use full path, auto reload does not work with path like "resource:myproperties.properties"
+			String filePath = "/home/emgda/git/maheshd-md/spring-boot-examples/ReloadFileWithoutRestartDemo/src/main/resources/myproperties.properties";
+			System.out.println("Loading the properties file: " + filePath);
+			configuration = new PropertiesConfiguration(filePath);
+			configuration.setAutoSave(true);
+			FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
+			fileChangedReloadingStrategy.setRefreshDelay(10 * 1000);
+			configuration.setReloadingStrategy(fileChangedReloadingStrategy);
 
-			
-			// Reload git file without restarting the application
-			URL url;
-			String username = "username";
-			String password = "password";
-
-			try {
-				// Note - Use raw file path
-				// Tested with public file, not tested with files in private repository
-				url = new URL(
-						"https://raw.githubusercontent.com/maheshd-md/spring-boot-examples/master/ReloadFileWithoutRestartDemo/src/main/resources/myproperties.properties");
-				URLConnection uc = url.openConnection();
-				uc.setRequestProperty("X-Requested-With", "Curl");
-
-				String userpass = username + ":" + password;
-				String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-				
-				uc.setRequestProperty("Authorization", basicAuth);
-
-				configuration = new PropertiesConfiguration(url);
-				configuration.setAutoSave(true);
-				FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
-				fileChangedReloadingStrategy.setRefreshDelay(10 * 1000);
-				configuration.setReloadingStrategy(fileChangedReloadingStrategy);
-
-			} catch (IOException e) {
-				System.out.println("Wrong username and password");
-			}
+			// Load file from git repository
+			// Auto reload without restarting application is not working for remote file
+//			URL url;
+//			String username = "username";
+//			String password = "password";
+//			try {
+//				// Note - Use raw file path
+//				// Tested with public file in public repo, not tested with files in private
+//				// repository
+//				url = new URL(
+//						"https://raw.githubusercontent.com/maheshd-md/spring-boot-examples/master/ReloadFileWithoutRestartDemo/src/main/resources/myproperties.properties");
+//				URLConnection uc = url.openConnection();
+//				uc.setRequestProperty("X-Requested-With", "Curl");
+//
+//				String userpass = username + ":" + password;
+//				String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+//
+//				uc.setRequestProperty("Authorization", basicAuth);
+//
+//				configuration = new PropertiesConfiguration(url);
+//				configuration.setAutoSave(true);
+//				FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
+//				fileChangedReloadingStrategy.setRefreshDelay(10 * 1000);
+//				configuration.setReloadingStrategy(fileChangedReloadingStrategy);
+//
+//			} catch (IOException e) {
+//				System.out.println("Wrong username and password");
+//			}
 
 		} catch (ConfigurationException e) {
 			e.printStackTrace();
