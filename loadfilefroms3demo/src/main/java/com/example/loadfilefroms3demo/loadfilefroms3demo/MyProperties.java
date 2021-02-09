@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import software.amazon.awssdk.core.ResponseBytes;
@@ -23,22 +24,23 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 public class MyProperties {
 
 	private PropertiesConfiguration configuration;
+	private File myFile = new File("myproperties.properties");
+	Region region = Region.US_EAST_2;
+	S3Client s3 = S3Client.builder().region(region).build();
+	String bucketName = "maheshd-md";
+	String keyName = "myproperties.properties";
+	String path = "s3://maheshd-md/myproperties.properties";
 
 	@PostConstruct
-	private void init() {
-
-		String bucketName = "maheshd-md";
-		String keyName = "myproperties.properties";
-		String path = "s3://maheshd-md/myproperties.properties";
+	@Scheduled(fixedRate = 10000)
+	public void reloadMyProperties() {
 
 		/*
-		 * Note: You need to setup aws credentials on machine where server is running
-		 * To know how to setup aws credentials visit: https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
+		 * Note: You need to setup aws credentials on machine where server is running To
+		 * know how to setup aws credentials visit:
+		 * https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html
 		 */
-		
-		Region region = Region.US_EAST_2;
-		S3Client s3 = S3Client.builder().region(region).build();
-		
+
 		try {
 			GetObjectRequest objectRequest = GetObjectRequest.builder().key(keyName).bucket(bucketName).build();
 
@@ -46,12 +48,11 @@ public class MyProperties {
 			byte[] data = objectBytes.asByteArray();
 
 			// Write the data to a local file
-			File myFile = new File("myproperties.properties");
 			OutputStream os = new FileOutputStream(myFile);
 			os.write(data);
 			System.out.println("Successfully obtained bytes from an S3 object");
 			os.close();
-			
+
 			System.out.println("Loading the properties file: " + myFile);
 			configuration = new PropertiesConfiguration(myFile);
 			configuration.setAutoSave(true);
