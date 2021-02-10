@@ -1,13 +1,12 @@
-package com.example.WorkFlowManagerDemo;
+package com.example.reloadfilewithoutrestart;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WorkFlowManagerDemoApplicationTests {
+class ReloadFileWithoutRestartDemoTests {
 
 	@Test
 	void contextLoads() {
 	}
-
 }
