@@ -37,9 +37,18 @@ public class ParkingSystemApplication {
 			String vehicleType = arr[2];
 			String entryType = arr[2];
 			
-			if(vehicleParkingMap.containsKey(vehicleNumber)) {
+			
+			if("Entry".equals(entryType) && !vehicleParkingMap.containsKey(vehicleNumber)) {
+				vehicleParkingMap.put(vehicleNumber, new AverageParkTime(vehicleType, vehicleNumber, 0l, time.getTime(), 0l));
+			} else if("Entry".equals(entryType) && vehicleParkingMap.containsKey(vehicleNumber)) {
 				AverageParkTime entry = vehicleParkingMap.get(vehicleNumber);
-			}
+				Long averageParkTimeInSec = entry.getAverageParkTimeInSec() + time.getTime() - entry.getEntryTime();
+				entry.setAverageParkTimeInSec(averageParkTimeInSec );
+			} else if("Exit".equals(entryType) && vehicleParkingMap.containsKey(vehicleNumber)) {
+				AverageParkTime entry = vehicleParkingMap.get(vehicleNumber);
+				Long averageParkTimeInSec = entry.getAverageParkTimeInSec() + time.getTime() - entry.getEntryTime();
+				entry.setAverageParkTimeInSec(averageParkTimeInSec );
+			} 
 		}
 
 	}

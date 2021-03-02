@@ -18,18 +18,27 @@ public class AverageParkTime {
 	
 	private Long averageParkTimeInSec;
 
+	private Long entryTime;
+	
+	private Long exitTime;
 	
 	public AverageParkTime() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public AverageParkTime(String vehicleType, String vehicleNumber, Long averageParkTimeInSec) {
+
+	public AverageParkTime(String vehicleType, String vehicleNumber, Long averageParkTimeInSec, Long entryTime,
+			Long lastExitTime) {
 		super();
 		this.vehicleType = vehicleType;
 		this.vehicleNumber = vehicleNumber;
 		this.averageParkTimeInSec = averageParkTimeInSec;
+		this.entryTime = entryTime;
+		this.exitTime = lastExitTime;
 	}
+
+
 
 
 	public Integer getId() {
@@ -63,4 +72,25 @@ public class AverageParkTime {
 	public void setAverageParkTimeInSec(Long averageParkTimeInSec) {
 		this.averageParkTimeInSec = averageParkTimeInSec;
 	}
+
+
+	public Long getEntryTime() {
+		return entryTime;
+	}
+
+
+	public void setEntryTime(Long entryTime) {
+		this.entryTime = entryTime;
+	}
+
+
+	public Long getExitTime() {
+		return exitTime;
+	}
+
+
+	public void setExitTime(Long exitTime) {
+		this.exitTime = exitTime;
+	}
+
 }
