@@ -7,25 +7,31 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ParkingSystemApplication {
 
+	@Autowired
+	AverageParkTimeRepository averageParkTimeRepository;
+	
 	public static void main(String[] args) throws ParseException {
 		SpringApplication.run(ParkingSystemApplication.class, args);
 
 		List<String> fileContent = readFile();
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-		Date startTime = format.parse(fileContent.get(0).split(",")[0]);
 
 		Map<String, AverageParkTime> vehicleParkingMap = new HashMap<>();
 		for (int i=0; i<fileContent.size(); i++) {
@@ -39,18 +45,28 @@ public class ParkingSystemApplication {
 			
 			
 			if("Entry".equals(entryType) && !vehicleParkingMap.containsKey(vehicleNumber)) {
-				vehicleParkingMap.put(vehicleNumber, new AverageParkTime(vehicleType, vehicleNumber, 0l, time.getTime(), 0l));
+				AverageParkTime entry = new AverageParkTime(vehicleType, vehicleNumber, 0l, time.getTime(), 0l);
+				entry.setTotalParkedTimeInSec(0l);
+				vehicleParkingMap.put(vehicleNumber, entry);
 			} else if("Entry".equals(entryType) && vehicleParkingMap.containsKey(vehicleNumber)) {
 				AverageParkTime entry = vehicleParkingMap.get(vehicleNumber);
-				Long averageParkTimeInSec = entry.getAverageParkTimeInSec() + time.getTime() - entry.getEntryTime();
-				entry.setAverageParkTimeInSec(averageParkTimeInSec );
+				entry.setEntryTime(time.getTime());
 			} else if("Exit".equals(entryType) && vehicleParkingMap.containsKey(vehicleNumber)) {
 				AverageParkTime entry = vehicleParkingMap.get(vehicleNumber);
-				Long averageParkTimeInSec = entry.getAverageParkTimeInSec() + time.getTime() - entry.getEntryTime();
-				entry.setAverageParkTimeInSec(averageParkTimeInSec );
+				entry.setExitTime(time.getTime());
+
+				Long totalParkedTime = entry.getTotalParkedTimeInSec() + time.getTime() - entry.getEntryTime();
+				Long totalParkedTimeInSec = totalParkedTime/1000;
+				entry.setTotalParkedTimeInSec(totalParkedTimeInSec );
+				
+				LocalDate start = Instant.ofEpochMilli(entry.getFistEntryTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+				LocalDate end = Instant.ofEpochMilli(entry.getExitTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+				long daysBetween = Duration.between(start, end).toDays();
+				entry.setAverageParkTimeInSec(totalParkedTimeInSec/daysBetween );
 			} 
 		}
 
+		new ParkingSystemApplication().averageParkTimeRepository.saveAll(vehicleParkingMap.values());
 	}
 
 	private static List<String> readFile() {

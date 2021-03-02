@@ -22,6 +22,10 @@ public class AverageParkTime {
 	
 	private Long exitTime;
 	
+	private Long fistEntryTime;
+	
+	private Long totalParkedTimeInSec;
+	
 	public AverageParkTime() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -93,4 +97,22 @@ public class AverageParkTime {
 		this.exitTime = exitTime;
 	}
 
+
+	public Long getFistEntryTime() {
+		return fistEntryTime;
+	}
+
+
+	public void setFistEntryTime(Long fistEntryTime) {
+		this.fistEntryTime = fistEntryTime;
+	}
+
+
+	public Long getTotalParkedTimeInSec() {
+		return totalParkedTimeInSec;
+	}
+
+	public void setTotalParkedTimeInSec(Long totalParkedTimeInSec) {
+		this.totalParkedTimeInSec = totalParkedTimeInSec;
+	}
 }
